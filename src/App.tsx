@@ -1,13 +1,18 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { PROJECTS, SKILL_CATEGORIES } from './data/projects';
-import { ProjectCard } from './components/ProjectCard';
+import { ProjectItem } from './components/ProjectItem';
+import { ContactForm } from './components/ContactForm';
 import { 
+  ArrowDown, 
   Mail, 
+  ExternalLink, 
   Code2, 
-  ChevronDown, 
-  Award,
-  Boxes
+  Award, 
+  Send,
+  Boxes,
+  Cpu,
+  Layers
 } from 'lucide-react';
 
 const GithubIcon = () => (
@@ -23,50 +28,48 @@ const LinkedinIcon = () => (
 );
 
 export function App() {
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
-
-  const filteredProjects = selectedFilter === 'all'
-    ? PROJECTS
-    : PROJECTS.filter((p) => p.category === selectedFilter);
-
-  const categories = [
-    { id: 'all', label: 'Todos los Proyectos' },
-    { id: 'Robotics & CV', label: 'Robótica & Visión' },
-    { id: 'AI & Automation', label: 'IA & Automatización' },
-    { id: 'Full-Stack', label: 'Web & Full-Stack' },
-    { id: 'Desktop & Java', label: 'Java Desktop' }
-  ];
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   return (
-    <div className="min-h-screen bg-[#08090d] text-slate-100 selection:bg-blue-500/30 selection:text-blue-300 relative">
-      {/* Background Grid Pattern & Ambient Gradients */}
-      <div className="fixed inset-0 bg-grid-pattern opacity-40 pointer-events-none z-0" />
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-blue-600/15 via-purple-600/5 to-transparent blur-[140px] pointer-events-none z-0" />
+    <div className="min-h-screen bg-[#08090d] text-slate-100 relative selection:bg-blue-600/30 selection:text-blue-300">
+      {/* Barra de progreso de lectura ultra-fina estilo Stripe/Linear */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500 via-cyan-400 to-teal-400 origin-left z-50"
+        style={{ scaleX }}
+      />
 
-      {/* Floating Header */}
-      <header className="sticky top-4 z-50 max-w-5xl mx-auto px-4">
-        <nav className="bg-[#0e111a]/85 backdrop-blur-md border border-slate-800/80 rounded-2xl px-5 py-3 flex items-center justify-between shadow-2xl shadow-black/50">
-          <a href="#" className="flex items-center gap-2.5 font-bold tracking-tight text-white hover:text-blue-400 transition-colors">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center font-mono text-sm text-slate-950 font-black shadow-lg shadow-blue-500/20">
+      {/* Grid discreto técnico */}
+      <div className="fixed inset-0 tech-grid opacity-50 pointer-events-none z-0" />
+
+      {/* Header sobrio y fijo */}
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#08090d]/80 backdrop-blur-md border-b border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="#" className="flex items-center gap-3 font-semibold text-white tracking-tight hover:text-blue-400 transition-colors">
+            <span className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-mono text-xs text-white font-bold">
               MN
-            </div>
-            <span className="text-sm">Miquel Navarrete</span>
+            </span>
+            <span>Miquel Navarrete</span>
           </a>
 
-          <div className="hidden sm:flex items-center gap-6 text-xs font-medium text-slate-400">
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
             <a href="#proyectos" className="hover:text-white transition-colors">Proyectos</a>
-            <a href="#stack" className="hover:text-white transition-colors">Habilidades</a>
             <a href="#experiencia" className="hover:text-white transition-colors">Trayectoria</a>
+            <a href="#stack" className="hover:text-white transition-colors">Stack</a>
             <a href="#contacto" className="hover:text-white transition-colors">Contacto</a>
-          </div>
+          </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <a
               href="https://github.com/miquel9"
               target="_blank"
               rel="noreferrer"
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all border border-transparent hover:border-slate-700"
-              title="GitHub de Miquel"
+              className="text-slate-400 hover:text-white transition-colors p-2"
+              title="GitHub"
             >
               <GithubIcon />
             </a>
@@ -74,283 +77,218 @@ export function App() {
               href="https://www.linkedin.com/in/navarretedelanuza/"
               target="_blank"
               rel="noreferrer"
-              className="p-2 rounded-xl text-slate-400 hover:text-cyan-400 hover:bg-slate-800/60 transition-all border border-transparent hover:border-slate-700"
-              title="LinkedIn de Miquel"
+              className="text-slate-400 hover:text-cyan-400 transition-colors p-2"
+              title="LinkedIn"
             >
               <LinkedinIcon />
             </a>
             <a
               href="#contacto"
-              className="hidden sm:inline-flex text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 cursor-pointer"
+              className="hidden sm:inline-flex text-xs font-semibold bg-white text-slate-950 hover:bg-slate-200 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
             >
-              Contactar
+              Hablemos
             </a>
           </div>
-        </nav>
+        </div>
       </header>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-4 pt-16 pb-28 space-y-28 md:space-y-36">
-        {/* HERO SECTION */}
-        <section className="text-center pt-8 md:pt-14 max-w-4xl mx-auto space-y-8">
+      {/* CONTENIDO PRINCIPAL */}
+      <main className="relative z-10 max-w-6xl mx-auto px-6 pt-28 sm:pt-36 space-y-28 md:space-y-40">
+        
+        {/* HERO SECTION - Plain Copy, Directo y Elegante */}
+        <section className="min-h-[75vh] flex flex-col justify-center max-w-3xl space-y-6">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/60 text-xs text-slate-300 font-mono shadow-inner"
+            className="flex items-center gap-2.5 text-xs font-mono text-slate-400"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span className="text-emerald-400 font-bold">DAIDALONIC</span> · Kinema Nexus Robotics & CV
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Valencia, España · UPV Ingeniería Informática</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1]"
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.12]"
           >
-            Construyendo soluciones de software,{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-300 bg-clip-text text-transparent">
-              IA & automatizaciones
-            </span>{' '}
-            con impacto real.
+            Software web a medida, automatizaciones con IA y robótica aplicada.
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-3xl mx-auto"
+            transition={{ duration: 0.55, delay: 0.16 }}
+            className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-2xl"
           >
-            Soy <strong className="text-white font-semibold">Miquel Navarrete de Lanuza</strong>, estudiante de{' '}
-            <span className="text-blue-300">Ingeniería Informática en la UPV</span>. Especializado en diseño de
-            pipelines inteligentes en <span className="text-orange-400 font-medium">n8n con LLMs</span>, desarrollo
-            de software a medida para <span className="text-white font-medium">empresas locales reales</span>, y visión
-            por computador con <span className="text-cyan-400 font-medium">YOLO Pose</span> para robótica.
+            Hola, soy <strong className="text-white font-medium">Miquel Navarrete de Lanuza</strong>. 
+            Desarrollo aplicaciones de facturación y gestión utilizadas por empresas reales, 
+            diseño flujos autónomos en <strong className="text-slate-200">n8n con Gemini</strong> y formo parte del equipo 
+            de visión por computador y teleoperación robótica <strong className="text-cyan-400">Kinema Nexus (DAIDALONIC)</strong>.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-3 pt-2"
+            transition={{ duration: 0.55, delay: 0.24 }}
+            className="flex flex-wrap items-center gap-4 pt-4"
           >
             <a
               href="#proyectos"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold text-sm px-6 py-3 rounded-2xl shadow-xl shadow-blue-500/25 transition-all active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 cursor-pointer"
             >
-              Explorar Proyectos & Simuladores
-              <ChevronDown className="w-4 h-4 animate-bounce" />
+              Ver Proyectos Destacados
+              <ArrowDown className="w-4 h-4" />
             </a>
             <a
-              href="https://github.com/miquel9/modern_portfolio"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-medium text-sm px-5 py-3 rounded-2xl border border-slate-700/80 transition-all cursor-pointer"
+              href="#contacto"
+              className="inline-flex items-center gap-2 bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-white/10 text-sm font-medium px-5 py-2.5 rounded-xl transition-all cursor-pointer"
             >
-              <GithubIcon />
-              Ver Código en GitHub
+              Enviar Mensaje
             </a>
           </motion.div>
-
-          {/* Key Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-8 border-t border-slate-800/80 max-w-3xl mx-auto text-left">
-            <div className="bg-[#0e111a]/60 border border-slate-800 p-3.5 rounded-2xl">
-              <div className="text-2xl font-mono font-bold text-white">UPV</div>
-              <div className="text-xs text-slate-400">Ingeniería Informática</div>
-            </div>
-            <div className="bg-[#0e111a]/60 border border-slate-800 p-3.5 rounded-2xl">
-              <div className="text-2xl font-mono font-bold text-cyan-400">Kinema</div>
-              <div className="text-xs text-slate-400">Daidalonic Robotics Team</div>
-            </div>
-            <div className="bg-[#0e111a]/60 border border-slate-800 p-3.5 rounded-2xl">
-              <div className="text-2xl font-mono font-bold text-orange-400">08:00 AM</div>
-              <div className="text-xs text-slate-400">Pipeline n8n diario activo</div>
-            </div>
-            <div className="bg-[#0e111a]/60 border border-slate-800 p-3.5 rounded-2xl">
-              <div className="text-2xl font-mono font-bold text-emerald-400">Producción</div>
-              <div className="text-xs text-slate-400">Software para empresa real</div>
-            </div>
-          </div>
         </section>
 
-        {/* PROJECTS SECTION */}
-        <section id="proyectos" className="space-y-8 scroll-mt-24">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-slate-800">
+        {/* PROYECTOS - FOTOGRAFÍAS REALES & EXPLICACIÓN LIMPIA */}
+        <section id="proyectos" className="space-y-16 scroll-mt-24">
+          <div className="border-b border-white/[0.08] pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <div className="text-xs font-mono text-blue-400 uppercase tracking-wider mb-1 flex items-center gap-2">
-                <Boxes className="w-4 h-4" /> Catálogo de Proyectos
-              </div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-                Software con Pruebas Interactivas
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-blue-400">
+                Selección de Trabajos
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mt-1">
+                Proyectos Realizados
               </h2>
-              <p className="text-sm text-slate-400 mt-1">
-                Puedes probar directamente el funcionamiento de cada aplicación o inspeccionar sus capturas reales de producción.
-              </p>
             </div>
-
-            {/* Categorías de Filtro */}
-            <div className="flex flex-wrap gap-1.5 bg-[#0f131f] p-1.5 rounded-2xl border border-slate-800">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedFilter(cat.id)}
-                  className={`text-xs px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
-                    selectedFilter === cat.id
-                      ? 'bg-blue-600 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
+            <p className="text-sm text-slate-400 max-w-md">
+              Sistemas en producción, automatizaciones diarias y desarrollos académicos con código e interfaz funcional.
+            </p>
           </div>
 
-          <div className="space-y-12">
-            {filteredProjects.map((project, idx) => (
-              <ProjectCard key={project.id} project={project} index={idx} />
+          <div className="space-y-16">
+            {PROJECTS.map((project, idx) => (
+              <ProjectItem key={project.id} project={project} index={idx} />
             ))}
           </div>
         </section>
 
-        {/* TECH STACK & SKILLS */}
+        {/* TRAYECTORIA & LOGROS */}
+        <section id="experiencia" className="space-y-12 scroll-mt-24">
+          <div className="border-b border-white/[0.08] pb-6">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-cyan-400">
+              Formación & Experiencia
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mt-1">
+              Trayectoria Activa
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-[#10131d] border border-white/10 p-6 rounded-2xl flex flex-col justify-between smooth-hover">
+              <div>
+                <div className="text-xs font-mono text-cyan-400 mb-2">2026 - Presente</div>
+                <h3 className="text-lg font-bold text-white mb-1">DAIDALONIC (Kinema Nexus)</h3>
+                <div className="text-xs text-slate-400 mb-4 font-medium">Robotics & Computer Vision Member</div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Integración de visión por computador con YOLO Pose para teleoperación de brazo robótico industrial UR5 y RoboDK. Clasificación cinemática y algoritmo de control de espacio para evitar colisiones con la mesa de trabajo.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#10131d] border border-white/10 p-6 rounded-2xl flex flex-col justify-between smooth-hover">
+              <div>
+                <div className="text-xs font-mono text-blue-400 mb-2">2024 - 2028</div>
+                <h3 className="text-lg font-bold text-white mb-1">Universitat Politècnica de València</h3>
+                <div className="text-xs text-slate-400 mb-4 font-medium">Grado en Ingeniería Informática</div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Bases sólidas de algoritmia, estructuras de datos, programación orientada a objetos (Java, Python), bases de datos relacionales y diseño de sistemas distribuidos.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#10131d] border border-white/10 p-6 rounded-2xl flex flex-col justify-between smooth-hover">
+              <div>
+                <div className="text-xs font-mono text-amber-400 mb-2">2024 · Galardón</div>
+                <h3 className="text-lg font-bold text-white mb-1">1er Premio Feria Tecnológica UPV</h3>
+                <div className="text-xs text-slate-400 mb-4 font-medium">Mesa Arcade Custom (Arduino / C++)</div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Diseño integral de hardware y software: modelado 3D en SketchUp, diseño de circuitos en Tinkercad y programación en C/C++ de juegos clásicos (Tetris, Snake) sobre microcontrolador con pantalla LCD y controles analógicos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* STACK TECNOLÓGICO */}
         <section id="stack" className="space-y-8 scroll-mt-24">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider flex items-center justify-center gap-2">
-              <Code2 className="w-4 h-4" /> Stack Técnico
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-              Lenguajes, Frameworks & Arquitecturas
+          <div className="border-b border-white/[0.08] pb-6">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-400">
+              Habilidades & Herramientas
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mt-1">
+              Stack Técnico
             </h2>
-            <p className="text-sm text-slate-400">
-              Herramientas con las que diseño sistemas automatizados, aplicaciones full-stack y algoritmos de percepción.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SKILL_CATEGORIES.map((cat, idx) => (
-              <motion.div
-                key={cat.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.5 }}
-                className="bg-[#0e111a]/80 border border-slate-800 p-5 rounded-2xl hover:border-slate-700 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <h4 className="text-sm font-semibold text-white mb-3 pb-2 border-b border-slate-800/80">
-                    {cat.name}
-                  </h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {cat.skills.map((s) => (
-                      <span
-                        key={s}
-                        className="text-xs px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-mono"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {SKILL_CATEGORIES.map((cat) => (
+              <div key={cat.name} className="bg-[#10131d] border border-white/10 p-5 rounded-2xl">
+                <h4 className="text-sm font-semibold text-white mb-3 pb-2 border-b border-white/[0.08]">
+                  {cat.name}
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {cat.skills.map((s) => (
+                    <span
+                      key={s}
+                      className="text-xs font-mono px-2.5 py-1 rounded bg-white/[0.04] text-slate-300 border border-white/[0.06]"
+                    >
+                      {s}
+                    </span>
+                  ))}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
 
-        {/* TRAYECTORIA & FORMACIÓN */}
-        <section id="experiencia" className="space-y-8 scroll-mt-24">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider flex items-center justify-center gap-2">
-              <Award className="w-4 h-4" /> Trayectoria
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-              Educación & Experiencia Práctica
+        {/* CONTACTO & FORMULARIO AL CORREO */}
+        <section id="contacto" className="space-y-8 scroll-mt-24 text-center">
+          <div className="max-w-xl mx-auto space-y-2">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-blue-400">
+              ¿Hablamos?
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+              Contacto Directo
             </h2>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-4">
-            <div className="bg-[#0e111a]/70 border border-cyan-500/20 p-6 rounded-2xl relative overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-mono font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded-md border border-cyan-500/20">
-                  DAIDALONIC · Kinema Nexus Team
-                </span>
-                <span className="text-xs text-slate-500 font-mono">2026 - Actualidad</span>
-              </div>
-              <h4 className="text-lg font-bold text-white">Robotics & Computer Vision Developer</h4>
-              <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Desarrollo en equipo de una plataforma de teleoperación para brazo robótico industrial UR5 integrada con RoboDK y visión artificial en Python. Implementación de algoritmos de clasificación cinemática de extremidades y validación geométrica de trayectorias.
-              </p>
-            </div>
-
-            <div className="bg-[#0e111a]/70 border border-slate-800 p-6 rounded-2xl">
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-md border border-blue-500/20">
-                  Universitat Politècnica de València (UPV)
-                </span>
-                <span className="text-xs text-slate-500 font-mono">2024 - 2028 (En curso)</span>
-              </div>
-              <h4 className="text-lg font-bold text-white">Grado en Ingeniería Informática</h4>
-              <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Formación integral en fundamentos de ingeniería de software, estructuras de datos y algoritmos, arquitecturas computacionales, bases de datos y desarrollo orientado a objetos con Java y Python.
-              </p>
-            </div>
-
-            <div className="bg-[#0e111a]/70 border border-slate-800 p-6 rounded-2xl">
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-md border border-amber-500/20">
-                  1er Premio Feria Tecnológica UPV 2024
-                </span>
-                <span className="text-xs text-slate-500 font-mono">2024</span>
-              </div>
-              <h4 className="text-lg font-bold text-white">Diseño & Fabricación de Mesa Arcade Custom</h4>
-              <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Modelado 3D en SketchUp, diseño y simulación circuital en Tinkercad y programación embebida en C/C++ para Arduino (Snake, Tetris, tiras LED RGB y pantalla LCD).
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* FOOTER & CONTACT */}
-        <section id="contacto" className="text-center pt-10 border-t border-slate-800/80 space-y-6">
-          <div className="max-w-xl mx-auto space-y-3">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white">¿Tienes un proyecto o reto en mente?</h3>
             <p className="text-sm text-slate-400">
-              Abierto a nuevas colaboraciones en ingeniería de software, desarrollo de automatizaciones o proyectos de robótica y visión por computador.
+              Rellena el siguiente formulario o escribe directamente a{' '}
+              <a href="mailto:miqnavdel@gmail.com" className="text-blue-400 hover:underline">
+                miqnavdel@gmail.com
+              </a>. Responderé con la mayor brevedad.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="mailto:miqnavdel@gmail.com"
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-5 py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 cursor-pointer"
-            >
-              <Mail className="w-4 h-4" />
-              miqnavdel@gmail.com
-            </a>
-            <a
-              href="https://www.linkedin.com/in/navarretedelanuza/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-[#121824] hover:bg-[#1a2335] text-slate-200 border border-slate-700 text-xs font-medium px-5 py-3 rounded-xl transition-all cursor-pointer"
-            >
-              <LinkedinIcon />
-              Conectar en LinkedIn
-            </a>
-            <a
-              href="https://github.com/miquel9"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-[#121824] hover:bg-[#1a2335] text-slate-200 border border-slate-700 text-xs font-medium px-5 py-3 rounded-xl transition-all cursor-pointer"
-            >
-              <GithubIcon />
-              github.com/miquel9
-            </a>
-          </div>
-
-          <div className="pt-12 text-xs text-slate-500 font-mono">
-            © {new Date().getFullYear()} Miquel Navarrete de Lanuza · Diseñado con precisión y taste anti-plantilla
-          </div>
+          <ContactForm />
         </section>
+
+        {/* FOOTER */}
+        <footer className="pt-16 pb-12 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-mono">
+          <div>
+            © {new Date().getFullYear()} Miquel Navarrete de Lanuza.
+          </div>
+          <div className="flex items-center gap-6">
+            <a href="https://github.com/miquel9" target="_blank" rel="noreferrer" className="hover:text-slate-300 transition-colors">
+              GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/navarretedelanuza/" target="_blank" rel="noreferrer" className="hover:text-slate-300 transition-colors">
+              LinkedIn
+            </a>
+            <a href="mailto:miqnavdel@gmail.com" className="hover:text-slate-300 transition-colors">
+              Email
+            </a>
+          </div>
+        </footer>
       </main>
     </div>
   );
