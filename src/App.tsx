@@ -3,7 +3,8 @@ import Lenis from 'lenis';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { PROJECTS, SKILL_CATEGORIES } from './data/projects';
 import { HeroParallax } from './components/HeroParallax';
-import { ProjectParallaxSection } from './components/ProjectParallaxSection';
+import { HorizontalScrollShowcase } from './components/HorizontalScrollShowcase';
+import { AppleRoboticsSequence } from './components/AppleRoboticsSequence';
 import { ContactForm } from './components/ContactForm';
 import { 
   ArrowDown, 
@@ -31,9 +32,8 @@ const LinkedinIcon = () => (
 );
 
 export function App() {
-  const projectsSectionRef = useRef<HTMLDivElement>(null);
+  const projectsRef = useRef<HTMLDivElement>(null);
 
-  // Inicializar Lenis para Smooth Parallax Scroll de alta precisión
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -54,7 +54,6 @@ export function App() {
     };
   }, []);
 
-  // Barra de progreso de lectura ultra-fina sincronizada al scroll
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -63,22 +62,21 @@ export function App() {
   });
 
   const scrollToProjects = () => {
-    projectsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    projectsRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen bg-[#050608] text-slate-100 relative selection:bg-blue-600/30 selection:text-blue-300">
       
-      {/* Barra de progreso de lectura (Scroll indicator) */}
+      {/* Barra de progreso de lectura (Scroll-Linked) */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 origin-left z-50"
         style={{ scaleX }}
       />
 
-      {/* Fondo técnico de puntos sutil */}
       <div className="fixed inset-0 tech-dot-grid opacity-35 pointer-events-none z-0" />
 
-      {/* Barra de navegación superior fija */}
+      {/* Header fijo */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-[#050608]/85 backdrop-blur-md border-b border-white/[0.08]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="#" className="flex items-center gap-2.5 font-bold tracking-tight text-white hover:text-cyan-400 transition-colors">
@@ -89,7 +87,8 @@ export function App() {
           </a>
 
           <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-slate-400">
-            <a href="#proyectos" className="hover:text-white transition-colors">Proyectos en Parallax</a>
+            <a href="#proyectos" className="hover:text-white transition-colors">Proyectos (Horizontal)</a>
+            <a href="#vision" className="hover:text-white transition-colors">Visión UR5 (Apple Scroll)</a>
             <a href="#experiencia" className="hover:text-white transition-colors">Trayectoria</a>
             <a href="#stack" className="hover:text-white transition-colors">Habilidades</a>
             <a href="#contacto" className="hover:text-white transition-colors">Contacto</a>
@@ -124,40 +123,27 @@ export function App() {
         </div>
       </header>
 
-      {/* 1. HERO PARALLAX SCROLL (Animación vinculada al scroll estilo Apple) */}
+      {/* 1. HERO PARALLAX (Scroll-Linked: el objeto 3D se endereza y escala a tu velocidad de scroll) */}
       <HeroParallax onExploreClick={scrollToProjects} />
 
-      {/* 2. PROYECTOS EN SCROLL-LINKED PARALLAX */}
-      <section id="proyectos" ref={projectsSectionRef} className="relative z-10 pt-10">
-        <div className="max-w-6xl mx-auto px-6 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
-          <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
-              Despliegues Reales & Percepción
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-1">
-              Proyectos Destacados
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-md">
-            Desplaza hacia abajo para ver cómo los elementos reaccionan y se revelan progresivamente a tu ritmo de lectura.
-          </p>
-        </div>
+      {/* 2. HORIZONTAL SCROLL-LINKED SHOWCASE (Tus proyectos se desplazan en el eje X guiados por el scroll vertical) */}
+      <div id="proyectos" ref={projectsRef}>
+        <HorizontalScrollShowcase />
+      </div>
 
-        <div className="space-y-4">
-          {PROJECTS.map((project, idx) => (
-            <ProjectParallaxSection key={project.id} project={project} index={idx} />
-          ))}
-        </div>
-      </section>
+      {/* 3. APPLE PRODUCT DEMO SEQUENCE (Desarmando el pipeline de visión de Kinema Nexus UR5 paso a paso) */}
+      <div id="vision">
+        <AppleRoboticsSequence />
+      </div>
 
-      {/* 3. TRAYECTORIA & LOGROS (Con Scroll Reveal suave) */}
+      {/* 4. TRAYECTORIA Y RECONOCIMIENTOS */}
       <section id="experiencia" className="relative z-10 max-w-6xl mx-auto px-6 py-28 border-b border-white/[0.08]">
         <div className="mb-12 border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
-              Experiencia & Reconocimientos
+              Formación & Logros Oficiales
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-1">
               Trayectoria Activa
             </h2>
           </div>
@@ -174,9 +160,9 @@ export function App() {
             <div>
               <div className="text-xs font-mono text-cyan-400 mb-2">2026 - Presente</div>
               <h3 className="text-lg font-bold text-white mb-1">DAIDALONIC · Kinema Nexus</h3>
-              <p className="text-xs text-slate-400 mb-4 font-medium">Robotics & Computer Vision</p>
+              <p className="text-xs text-slate-400 mb-4 font-medium">Robotics & Computer Vision Member</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Teleoperación para brazo industrial UR5 en RoboDK con visión artificial en Python. Implementación de tracking YOLO Pose de hombro, codo y mano, y módulo de seguridad de espacio para prevenir colisiones con la mesa de trabajo.
+                Teleoperación para brazo industrial UR5 en RoboDK con visión artificial en Python. Implementación de tracking articular YOLO Pose y módulo de control espacial para impedir colisiones con la mesa de trabajo.
               </p>
             </div>
           </motion.div>
@@ -193,7 +179,7 @@ export function App() {
               <h3 className="text-lg font-bold text-white mb-1">Universitat Politècnica de València</h3>
               <p className="text-xs text-slate-400 mb-4 font-medium">Grado en Ingeniería Informática</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Formación en ingeniería de software, algoritmia y estructuras de datos, programación orientada a objetos (Java, Python), bases de datos relacionales y diseño de sistemas distribuidos.
+                Fundamentos de ingeniería del software, algoritmos y estructuras de datos, programación en Java y Python, bases de datos SQL y arquitectura de computadores.
               </p>
             </div>
           </motion.div>
@@ -210,14 +196,14 @@ export function App() {
               <h3 className="text-lg font-bold text-white mb-1">1er Premio Feria Tecnológica UPV</h3>
               <p className="text-xs text-slate-400 mb-4 font-medium">Mesa Arcade Custom (Arduino / C++)</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Modelado 3D en SketchUp, diseño y simulación en Tinkercad y programación embebida en C/C++ sobre Arduino (juegos Snake, Tetris, matriz de LEDs RGB y display LCD).
+                Modelado 3D en SketchUp, diseño y simulación en Tinkercad y programación embebida en C/C++ sobre Arduino (Snake, Tetris, matriz de LEDs RGB y display LCD).
               </p>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 4. STACK TECNOLÓGICO */}
+      {/* 5. STACK TECNOLÓGICO */}
       <section id="stack" className="relative z-10 max-w-6xl mx-auto px-6 py-20 border-b border-white/[0.08]">
         <div className="mb-10">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
@@ -254,7 +240,7 @@ export function App() {
         </div>
       </section>
 
-      {/* 5. CONTACTO CON FORMULARIO REAL DIRECTO AL CORREO */}
+      {/* 6. CONTACTO CON FORMULARIO REAL DIRECTO AL CORREO */}
       <section id="contacto" className="relative z-10 max-w-4xl mx-auto px-6 py-28 text-center space-y-8">
         <div className="space-y-3">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
@@ -275,7 +261,7 @@ export function App() {
       <footer className="relative z-10 border-t border-white/[0.08] py-12 px-6 text-xs text-slate-500 font-mono">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            © {new Date().getFullYear()} Miquel Navarrete de Lanuza · Portfolio con Parallax Scroll Dinámico
+            © {new Date().getFullYear()} Miquel Navarrete de Lanuza · Motion.dev Scroll-Linked Portfolio
           </div>
           <div className="flex items-center gap-6">
             <a href="https://github.com/miquel9" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
