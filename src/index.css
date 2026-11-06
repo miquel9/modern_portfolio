@@ -2,49 +2,75 @@
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/500.css";
 
+/* Overrides para combinar Tailwind v4 con los tokens canónicos de taste-skill */
 :root {
-  --bg: #08090d;
-  --bg-card: #10131d;
+  --bg: #070708;
+  --card: #121316;
+  --surface: #18191e;
+  --ink: #f2f2f3;
+  --muted: #8a8d98;
+  --accent: #2563eb;
   --border: rgba(255, 255, 255, 0.08);
-  --ink: #f1f5f9;
-  --accent: #3b82f6;
-}
-
-html {
-  scroll-behavior: smooth;
-  color-scheme: dark;
+  --border-subtle: rgba(255, 255, 255, 0.04);
 }
 
 body {
-  margin: 0;
-  padding: 0;
   background-color: var(--bg);
   color: var(--ink);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-code, kbd, samp, pre {
-  font-family: 'JetBrains Mono', monospace;
+/* Taste minimal button */
+.btn-taste {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 22px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  cursor: pointer;
 }
 
-/* Subtle dot grid */
-.tech-grid {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+.btn-taste-primary {
+  background-color: #f2f2f3;
+  color: #070708;
+}
+.btn-taste-primary:hover {
+  background-color: #ffffff;
+  transform: translateY(-1px);
 }
 
-.smooth-hover {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.25s ease;
+.btn-taste-secondary {
+  background-color: transparent;
+  color: #f2f2f3;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
-.smooth-hover:hover {
-  transform: translateY(-3px);
+.btn-taste-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Taste Card (x.ai style: hairline, true size preview, clean 1px highlight) */
+.taste-card {
+  background: #121316;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+.taste-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+/* Clean hairline divider */
+.hairline {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }

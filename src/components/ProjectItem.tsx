@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Project } from '../data/projects';
-import { ExternalLink, Terminal, Sparkles, ChevronRight, Check } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-// Opcional: Mini prueba interactiva accesible bajo demanda
+import { ArrowUpRight, Terminal, Check } from 'lucide-react';
 import { NavarreteCalculator } from './interactive/NavarreteCalculator';
 import { N8nSimulator } from './interactive/N8nSimulator';
 import { RoboticsVisionSimulator } from './interactive/RoboticsVisionSimulator';
@@ -14,13 +11,11 @@ interface Props {
   index: number;
 }
 
-export const ProjectItem: React.FC<Props> = ({ project, index }) => {
-  const [showDemo, setShowDemo] = useState(false);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+export const ProjectItem: React.FC<Props> = ({ project }) => {
+  const [showSim, setShowSim] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
 
-  const isReverse = index % 2 !== 0;
-
-  const renderMiniSimulator = () => {
+  const renderSim = () => {
     switch (project.interactiveType) {
       case 'navarrete-calc':
         return <NavarreteCalculator />;
@@ -36,131 +31,104 @@ export const ProjectItem: React.FC<Props> = ({ project, index }) => {
   };
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="border-b border-white/[0.08] pb-16 md:pb-24 last:border-b-0"
-    >
-      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center ${
-        isReverse ? 'lg:grid-flow-dense' : ''
-      }`}>
-        {/* Columna de Texto y Explicación */}
-        <div className={`lg:col-span-5 space-y-4 ${isReverse ? 'lg:col-start-8' : ''}`}>
-          <div className="flex items-center gap-2.5">
-            <span className="text-xs font-mono font-semibold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded border border-blue-500/20">
-              {project.badge}
-            </span>
-            <span className="text-xs text-slate-500 font-mono">{project.period}</span>
-          </div>
-
-          <div>
-            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-              {project.title}
-            </h3>
-            <p className="text-sm font-medium text-slate-400 mt-1">
-              {project.subtitle}
-            </p>
-          </div>
-
-          <p className="text-sm text-slate-300 leading-relaxed">
-            {project.description}
-          </p>
-
-          {/* Hitos en lista limpia */}
-          <ul className="space-y-2 pt-1 text-xs text-slate-400">
-            {project.highlights.map((h, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />
-                <span>{h}</span>
-              </li>
-            ))}
-          </ul>
-
-          {/* Tecnologías */}
-          <div className="flex flex-wrap gap-1.5 pt-2">
-            {project.tags.map((t) => (
-              <span
-                key={t}
-                className="text-xs font-mono px-2 py-0.5 rounded bg-white/[0.04] text-slate-400 border border-white/[0.06]"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-
-          {/* Botón para abrir el simulador si el usuario desea probar */}
-          <div className="pt-2">
-            <button
-              onClick={() => setShowDemo(!showDemo)}
-              className="inline-flex items-center gap-2 text-xs font-semibold text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 px-3.5 py-2 rounded-lg transition-colors cursor-pointer"
-            >
-              <Terminal className="w-3.5 h-3.5" />
-              {showDemo ? 'Ocultar Simulador' : 'Probar Simulador en Vivo'}
-            </button>
-          </div>
+    <article className="taste-card p-6 sm:p-8 flex flex-col justify-between">
+      <div>
+        {/* Top meta */}
+        <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.06]">
+          <span className="text-xs font-mono text-[#8a8d98]">
+            {project.badge}
+          </span>
+          <span className="text-xs font-mono text-[#8a8d98]">
+            {project.period}
+          </span>
         </div>
 
-        {/* Columna Visual: Fotografía / Captura de Alta Fidelidad */}
-        <div className={`lg:col-span-7 ${isReverse ? 'lg:col-start-1' : ''}`}>
-          <div className="bg-[#10131d] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group">
-            {project.images.length > 0 ? (
-              <div className="relative">
-                {/* Visual principal */}
-                <div className="overflow-hidden bg-[#0a0c12]">
-                  <img
-                    src={project.images[activeImageIndex]}
-                    alt={project.title}
-                    className="w-full h-auto object-cover max-h-[440px] transform transition-transform duration-500 group-hover:scale-[1.02]"
-                  />
-                </div>
+        {/* Title and subtitle */}
+        <h3 className="text-xl sm:text-2xl font-semibold text-[#f2f2f3] tracking-tight">
+          {project.title}
+        </h3>
+        <p className="text-sm text-[#8a8d98] mt-1 mb-4">
+          {project.subtitle}
+        </p>
 
-                {/* Si hay más de una foto, selector elegante en la esquina inferior */}
-                {project.images.length > 1 && (
-                  <div className="absolute bottom-3 right-3 flex gap-1.5 bg-black/70 backdrop-blur-md p-1 rounded-lg border border-white/10">
-                    {project.images.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setActiveImageIndex(i)}
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded transition-all cursor-pointer ${
-                          activeImageIndex === i
-                            ? 'bg-blue-600 text-white'
-                            : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        Vista 0{i + 1}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              /* En caso de Robótica sin captura externa, mostramos el visual cinemático elegante */
-              <div className="p-6 md:p-8 bg-[#0a0d17] min-h-[300px] flex flex-col justify-center items-center text-center">
-                <RoboticsVisionSimulator />
-              </div>
-            )}
-          </div>
+        <p className="text-sm text-[#d4d4d8] leading-relaxed mb-6">
+          {project.description}
+        </p>
+
+        {/* Visual Showcase: Fotografía real de la app enmarcada a tamaño completo */}
+        <div className="rounded-xl overflow-hidden border border-white/10 bg-[#0d0e12] mb-6">
+          {project.images.length > 0 ? (
+            <div>
+              <img
+                src={project.images[activeImg]}
+                alt={project.title}
+                className="w-full h-auto max-h-[380px] object-cover"
+              />
+              {project.images.length > 1 && (
+                <div className="flex gap-2 p-2 bg-[#090a0d] border-t border-white/[0.06] justify-end">
+                  {project.images.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveImg(i)}
+                      className={`text-[11px] font-mono px-2 py-0.5 rounded cursor-pointer transition-colors ${
+                        activeImg === i
+                          ? 'bg-white/20 text-white font-medium'
+                          : 'text-[#8a8d98] hover:text-white'
+                      }`}
+                    >
+                      Captura {i + 1}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="p-4 bg-[#090a0d]">
+              <RoboticsVisionSimulator />
+            </div>
+          )}
+        </div>
+
+        {/* Key bullets */}
+        <div className="space-y-2 mb-6">
+          {project.highlights.map((h, i) => (
+            <div key={i} className="text-xs text-[#8a8d98] flex items-start gap-2">
+              <span className="text-white mt-0.5">·</span>
+              <span>{h}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Mini Simulador desplegable si el usuario pulsa en probarlo */}
-      <AnimatePresence>
-        {showDemo && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mt-6 overflow-hidden"
+      <div>
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.06] mb-4">
+          {project.tags.map((t) => (
+            <span
+              key={t}
+              className="text-[11px] font-mono text-[#8a8d98] px-2 py-0.5 rounded bg-white/[0.03] border border-white/[0.06]"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {/* Simulador opcional discreto */}
+        {project.interactiveType !== 'robotics-vision' && (
+          <button
+            onClick={() => setShowSim(!showSim)}
+            className="w-full text-xs font-mono text-center text-[#8a8d98] hover:text-white py-2 rounded border border-white/[0.08] hover:border-white/20 transition-all cursor-pointer"
           >
-            <div className="pt-4 border-t border-white/10">
-              {renderMiniSimulator()}
-            </div>
-          </motion.div>
+            {showSim ? 'Ocultar prueba simulada' : 'Abrir prueba simulada en vivo'}
+          </button>
         )}
-      </AnimatePresence>
-    </motion.article>
+
+        {showSim && (
+          <div className="mt-4 pt-4 border-t border-white/[0.06]">
+            {renderSim()}
+          </div>
+        )}
+      </div>
+    </article>
   );
 };
