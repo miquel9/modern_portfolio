@@ -1,23 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { PROJECTS, SKILL_CATEGORIES } from './data/projects';
+import { TRANSLATIONS, Language } from './data/translations';
 import { HeroParallax } from './components/HeroParallax';
 import { HorizontalScrollShowcase } from './components/HorizontalScrollShowcase';
 import { AppleSkillsSequence } from './components/AppleSkillsSequence';
 import { ContactForm } from './components/ContactForm';
-import { 
-  ArrowDown, 
-  ExternalLink, 
-  Cpu, 
-  Mail, 
-  Award, 
-  Sparkles,
-  Layers,
-  Terminal,
-  Activity,
-  ChevronRight
-} from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 const GithubIcon = () => (
   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -32,7 +21,10 @@ const LinkedinIcon = () => (
 );
 
 export function App() {
+  const [lang, setLang] = useState<Language>('es');
   const projectsRef = useRef<HTMLDivElement>(null);
+
+  const t = TRANSLATIONS[lang];
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -76,7 +68,7 @@ export function App() {
 
       <div className="fixed inset-0 tech-dot-grid opacity-35 pointer-events-none z-0" />
 
-      {/* Header fijo */}
+      {/* Header fijo: un solo botón de contacto y selector de idiomas (ES / EN / VA) */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-[#050608]/85 backdrop-blur-md border-b border-white/[0.08]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="#" className="flex items-center gap-2.5 font-bold tracking-tight text-white hover:text-cyan-400 transition-colors">
@@ -87,13 +79,44 @@ export function App() {
           </a>
 
           <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-slate-400">
-            <a href="#proyectos" className="hover:text-white transition-colors">Proyectos</a>
-            <a href="#habilidades" className="hover:text-white transition-colors">Habilidades (Apple Scroll)</a>
-            <a href="#experiencia" className="hover:text-white transition-colors">Trayectoria</a>
-            <a href="#contacto" className="hover:text-white transition-colors">Contacto</a>
+            <a href="#proyectos" className="hover:text-white transition-colors">{t.ui.nav.projects}</a>
+            <a href="#habilidades" className="hover:text-white transition-colors">{t.ui.nav.skills}</a>
+            <a href="#experiencia" className="hover:text-white transition-colors">{t.ui.nav.experience}</a>
+            <a href="#contacto" className="hover:text-white transition-colors">{t.ui.nav.contact}</a>
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* Selector de idioma con banderas / códigos (ES, EN, VA) */}
+            <div className="flex items-center bg-white/[0.05] border border-white/10 rounded-lg p-0.5 text-[11px] font-mono">
+              <button
+                onClick={() => setLang('es')}
+                className={`px-2 py-1 rounded transition-colors cursor-pointer ${
+                  lang === 'es' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                }`}
+                title="Español"
+              >
+                ES
+              </button>
+              <button
+                onClick={() => setLang('en')}
+                className={`px-2 py-1 rounded transition-colors cursor-pointer ${
+                  lang === 'en' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                }`}
+                title="English"
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLang('va')}
+                className={`px-2 py-1 rounded transition-colors cursor-pointer ${
+                  lang === 'va' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                }`}
+                title="Valencià"
+              >
+                VA
+              </button>
+            </div>
+
             <a
               href="https://github.com/miquel9"
               target="_blank"
@@ -112,27 +135,21 @@ export function App() {
             >
               <LinkedinIcon />
             </a>
-            <a
-              href="#contacto"
-              className="text-xs font-semibold bg-white text-slate-950 hover:bg-slate-200 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
-            >
-              Contactar
-            </a>
           </div>
         </div>
       </header>
 
-      {/* 1. HERO PARALLAX: Presentación personal y visión global equilibrada */}
-      <HeroParallax onExploreClick={scrollToProjects} />
+      {/* 1. HERO PARALLAX */}
+      <HeroParallax onExploreClick={scrollToProjects} ui={t.ui.hero} />
 
-      {/* 2. HORIZONTAL SCROLL-LINKED SHOWCASE (Tus proyectos en un paseo horizontal interactivo) */}
+      {/* 2. HORIZONTAL SHOWCASE PROYECTOS */}
       <div id="proyectos" ref={projectsRef}>
-        <HorizontalScrollShowcase />
+        <HorizontalScrollShowcase projects={t.projects} ui={t.ui.projectsShowcase} />
       </div>
 
-      {/* 3. APPLE SCROLL SEQUENCE: HABILIDADES, LENGUAJES Y LO QUE SÉ HACER */}
+      {/* 3. SECUENCIA DE HABILIDADES */}
       <div id="habilidades">
-        <AppleSkillsSequence />
+        <AppleSkillsSequence ui={t.ui.skillsSequence} />
       </div>
 
       {/* 4. TRAYECTORIA Y RECONOCIMIENTOS */}
@@ -140,10 +157,10 @@ export function App() {
         <div className="mb-12 border-b border-white/10 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
-              Formación & Logros Oficiales
+              {t.ui.experience.badge}
             </span>
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-1">
-              Trayectoria Activa
+              {t.ui.experience.title}
             </h2>
           </div>
         </div>
@@ -158,10 +175,10 @@ export function App() {
           >
             <div>
               <div className="text-xs font-mono text-cyan-400 mb-2">2026 - Presente</div>
-              <h3 className="text-lg font-bold text-white mb-1">DAIDALONIC · Kinema Nexus</h3>
-              <p className="text-xs text-slate-400 mb-4 font-medium">Robotics & Computer Vision Member</p>
+              <h3 className="text-lg font-bold text-white mb-1">{t.ui.experience.daidalonicTitle}</h3>
+              <p className="text-xs text-slate-400 mb-4 font-medium">{t.ui.experience.daidalonicRole}</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Teleoperación para brazo industrial UR5 en RoboDK con visión artificial en Python. Implementación de tracking articular YOLO Pose y módulo de control espacial para impedir colisiones con la mesa de trabajo.
+                {t.ui.experience.daidalonicDesc}
               </p>
             </div>
           </motion.div>
@@ -174,11 +191,11 @@ export function App() {
             className="bg-[#0b0e15] border border-white/10 p-6 rounded-2xl flex flex-col justify-between hover:border-blue-500/40 transition-colors"
           >
             <div>
-              <div className="text-xs font-mono text-blue-400 mb-2">2024 - 2028 (En curso)</div>
-              <h3 className="text-lg font-bold text-white mb-1">Universitat Politècnica de València</h3>
-              <p className="text-xs text-slate-400 mb-4 font-medium">Grado en Ingeniería Informática</p>
+              <div className="text-xs font-mono text-blue-400 mb-2">2024 - 2028</div>
+              <h3 className="text-lg font-bold text-white mb-1">{t.ui.experience.upvTitle}</h3>
+              <p className="text-xs text-slate-400 mb-4 font-medium">{t.ui.experience.upvDegree}</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Formación en programación orientada a objetos (Java, Python), estructuras de datos, algoritmia, bases de datos relacionales SQL y diseño de aplicaciones.
+                {t.ui.experience.upvDesc}
               </p>
             </div>
           </motion.div>
@@ -191,11 +208,11 @@ export function App() {
             className="bg-[#0b0e15] border border-white/10 p-6 rounded-2xl flex flex-col justify-between hover:border-amber-500/40 transition-colors"
           >
             <div>
-              <div className="text-xs font-mono text-amber-400 mb-2">2024 · Galardón Oficial</div>
-              <h3 className="text-lg font-bold text-white mb-1">1er Premio Feria Tecnológica UPV</h3>
-              <p className="text-xs text-slate-400 mb-4 font-medium">Mesa Arcade Custom (Arduino / C++)</p>
+              <div className="text-xs font-mono text-amber-400 mb-2">2024</div>
+              <h3 className="text-lg font-bold text-white mb-1">{t.ui.experience.awardTitle}</h3>
+              <p className="text-xs text-slate-400 mb-4 font-medium">{t.ui.experience.awardProject}</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Modelado 3D en SketchUp, diseño y simulación en Tinkercad y programación embebida en C/C++ sobre Arduino (Snake, Tetris, matriz de LEDs RGB y display LCD).
+                {t.ui.experience.awardDesc}
               </p>
             </div>
           </motion.div>
@@ -206,24 +223,24 @@ export function App() {
       <section id="contacto" className="relative z-10 max-w-4xl mx-auto px-6 py-28 text-center space-y-8">
         <div className="space-y-3">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
-            Conectemos
+            {t.ui.contact.badge}
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            ¿Tienes un proyecto o reto en mente?
+            {t.ui.contact.title}
           </h2>
           <p className="text-sm text-slate-400 max-w-md mx-auto">
-            Abierto a proyectos de software, desarrollo de automatizaciones con IA o robótica. Rellena el formulario o escribe a <a href="mailto:miqnavdel@gmail.com" className="text-cyan-400 underline">miqnavdel@gmail.com</a>.
+            {t.ui.contact.subtitle}
           </p>
         </div>
 
-        <ContactForm />
+        <ContactForm ui={t.ui.contact} />
       </section>
 
       {/* FOOTER */}
       <footer className="relative z-10 border-t border-white/[0.08] py-12 px-6 text-xs text-slate-500 font-mono">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            © {new Date().getFullYear()} Miquel Navarrete de Lanuza · Portfolio con Scroll-Linked Motion
+            © {new Date().getFullYear()} Miquel Navarrete de Lanuza · {t.ui.footer.rights}
           </div>
           <div className="flex items-center gap-6">
             <a href="https://github.com/miquel9" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">

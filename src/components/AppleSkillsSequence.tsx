@@ -1,20 +1,19 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Code2, Bot, Layers, Terminal, Sparkles, CheckCircle2, Cpu } from 'lucide-react';
+import { Code2, Bot, Layers } from 'lucide-react';
+import { UiTranslations } from '../data/translations';
 
-export const AppleSkillsSequence: React.FC = () => {
+interface Props {
+  ui: UiTranslations['skillsSequence'];
+}
+
+export const AppleSkillsSequence: React.FC<Props> = ({ ui }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Hook Scroll-Linked oficial: target y offset
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   });
-
-  // Animaciones encadenadas a lo largo del scroll continuo (0 a 1)
-  // Fase 1 (0 -> 0.33): Lenguajes de Programación & Core (Java, Python, TS/JS, C#, SQL, C++)
-  // Fase 2 (0.33 -> 0.66): Automatización Inteligente & Pipelines con IA (n8n, Gemini, Webhooks)
-  // Fase 3 (0.66 -> 1.0): Robótica, Visión Artificial & Sistemas Reales (YOLO Pose, UR5, RoboDK, Desktop Java)
 
   const textStep1 = useTransform(scrollYProgress, [0, 0.25, 0.35], [1, 1, 0]);
   const textStep2 = useTransform(scrollYProgress, [0.28, 0.45, 0.68], [0, 1, 0]);
@@ -23,69 +22,62 @@ export const AppleSkillsSequence: React.FC = () => {
   const scaleCanvas = useTransform(scrollYProgress, [0, 0.5, 1], [0.94, 1.03, 1]);
   const rotateCanvasY = useTransform(scrollYProgress, [0, 0.5, 1], [-8, 0, 8]);
 
-  // Transformaciones de barras y elementos interactivos internos vinculados al scroll
-  const codeProgress = useTransform(scrollYProgress, [0, 0.35], ['10%', '95%']);
-  const activePill = useTransform(scrollYProgress, [0, 0.33, 0.66, 1], ['Lenguajes', 'Lenguajes', 'Automatización & IA', 'Robótica & Sistemas']);
-
   return (
     <section ref={containerRef} className="relative h-[320vh] bg-[#07090f] border-t border-b border-white/10">
       <div className="sticky top-0 h-screen flex flex-col justify-center items-center px-6 overflow-hidden">
         
-        {/* Cabecera de la secuencia */}
+        {/* Cabecera limpia sin coletillas de Apple */}
         <div className="text-center max-w-2xl mb-8 space-y-2">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
-            Scroll-Linked Sequence // Lo que sé hacer
+            {ui.topBadge}
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Desglosando mis Habilidades
+            {ui.title}
           </h2>
           <p className="text-xs sm:text-sm text-slate-400">
-            A medida que deslizas, exploras en profundidad mis lenguajes, automatizaciones y proyectos prácticos.
+            {ui.subtitle}
           </p>
         </div>
 
-        {/* Visor interactivo central */}
         <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           
-          {/* Columna de explicación con revelado por pasos vinculados */}
           <div className="md:col-span-5 relative h-56 flex items-center">
             
-            {/* Paso 1: Lenguajes & Programación */}
+            {/* Paso 1: Lenguajes */}
             <motion.div style={{ opacity: textStep1 }} className="absolute inset-0 flex flex-col justify-center space-y-3">
               <div className="flex items-center gap-2 text-blue-400 text-xs font-mono font-bold">
-                <Code2 className="w-4 h-4" /> ETAPA 01 // LENGUAJES & BASES
+                <Code2 className="w-4 h-4" /> {ui.stage1Badge}
               </div>
-              <h4 className="text-2xl font-bold text-white">Dominio Multilenguaje</h4>
+              <h4 className="text-2xl font-bold text-white">{ui.stage1Title}</h4>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Base sólida en programación orientada a objetos con <strong>Java</strong> y <strong>Python</strong>. Desarrollo web moderno con <strong>TypeScript / JavaScript</strong>, <strong>HTML & CSS</strong>, diseño de consultas en <strong>SQL</strong> y nociones prácticas de <strong>C#</strong> y <strong>C/C++</strong> para hardware. Control de versiones diario con <strong>Git & GitHub</strong>.
+                {ui.stage1Desc}
               </p>
             </motion.div>
 
             {/* Paso 2: Automatización & IA */}
             <motion.div style={{ opacity: textStep2 }} className="absolute inset-0 flex flex-col justify-center space-y-3">
               <div className="flex items-center gap-2 text-orange-400 text-xs font-mono font-bold">
-                <Bot className="w-4 h-4" /> ETAPA 02 // PIPELINES & MODELOS
+                <Bot className="w-4 h-4" /> {ui.stage2Badge}
               </div>
-              <h4 className="text-2xl font-bold text-white">Automatizaciones con n8n & LLMs</h4>
+              <h4 className="text-2xl font-bold text-white">{ui.stage2Title}</h4>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Creación de flujos inteligentes que se disparan en segundo plano. Integración de la API de <strong>Google Gemini Flash</strong> para sintetizar noticias RSS matutinas, filtrado con código JavaScript en nodos y despacho instantáneo con bots de <strong>Telegram</strong>.
+                {ui.stage2Desc}
               </p>
             </motion.div>
 
-            {/* Paso 3: Robótica & Aplicaciones Reales */}
+            {/* Paso 3: Robótica & Sistemas */}
             <motion.div style={{ opacity: textStep3 }} className="absolute inset-0 flex flex-col justify-center space-y-3">
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-mono font-bold">
-                <Layers className="w-4 h-4" /> ETAPA 03 // VISIÓN & SISTEMAS REALES
+                <Layers className="w-4 h-4" /> {ui.stage3Badge}
               </div>
-              <h4 className="text-2xl font-bold text-white">Robótica (Daidalonic) & Apps Desktop</h4>
+              <h4 className="text-2xl font-bold text-white">{ui.stage3Title}</h4>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Desarrollo en <strong>Kinema Nexus</strong>: teleoperación con brazo robótico UR5 y tracking articular 3D con <strong>YOLO Pose</strong> en Python. Además, desarrollo de software de escritorio en Java (JavaFX / Scene Builder) y apps web en producción para carpinterías locales.
+                {ui.stage3Desc}
               </p>
             </motion.div>
 
           </div>
 
-          {/* Columna Visual 3D sincronizada al scroll */}
           <div className="md:col-span-7 perspective-container">
             <motion.div
               style={{
@@ -99,22 +91,18 @@ export const AppleSkillsSequence: React.FC = () => {
                 <span>DESLIZAMIENTO ACTIVO</span>
               </div>
 
-              {/* Animación interactiva en el panel */}
               <div className="space-y-4 py-2">
-                
-                {/* Visual dinámico de lenguajes / stack */}
                 <div className="bg-[#06080d] p-4 rounded-2xl border border-white/10 space-y-3">
                   <div className="flex justify-between items-center text-xs font-mono">
-                    <span className="text-slate-300">Nivel de Integración en Proyectos</span>
+                    <span className="text-slate-300">{ui.monitorTitle}</span>
                     <span className="text-cyan-400 font-bold">Activo</span>
                   </div>
 
-                  {/* Barras de destreza dinámica */}
                   <div className="space-y-2 text-xs">
                     <div>
                       <div className="flex justify-between text-slate-400 text-[11px] mb-1">
                         <span>Java & Python (POO, Visión, Algoritmia)</span>
-                        <span className="text-white font-mono">Avanzado</span>
+                        <span className="text-white font-mono">{ui.levelAdvanced}</span>
                       </div>
                       <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-blue-500 w-[90%]" />
@@ -124,7 +112,7 @@ export const AppleSkillsSequence: React.FC = () => {
                     <div>
                       <div className="flex justify-between text-slate-400 text-[11px] mb-1">
                         <span>TypeScript / JavaScript & React / HTML / CSS</span>
-                        <span className="text-white font-mono">Fluido</span>
+                        <span className="text-white font-mono">{ui.levelFluent}</span>
                       </div>
                       <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-cyan-400 w-[85%]" />
@@ -134,7 +122,7 @@ export const AppleSkillsSequence: React.FC = () => {
                     <div>
                       <div className="flex justify-between text-slate-400 text-[11px] mb-1">
                         <span>n8n Pipelines & LLM Chains (Gemini API)</span>
-                        <span className="text-white font-mono">Especialidad</span>
+                        <span className="text-white font-mono">{ui.levelSpecialty}</span>
                       </div>
                       <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-orange-400 w-[88%]" />
@@ -144,7 +132,7 @@ export const AppleSkillsSequence: React.FC = () => {
                     <div>
                       <div className="flex justify-between text-slate-400 text-[11px] mb-1">
                         <span>SQL, Git/GitHub, C/C++ y C#</span>
-                        <span className="text-white font-mono">Práctico</span>
+                        <span className="text-white font-mono">{ui.levelPractical}</span>
                       </div>
                       <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-emerald-400 w-[80%]" />
@@ -153,7 +141,6 @@ export const AppleSkillsSequence: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Etiquetas de herramientas en vivo */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {['Java', 'Python', 'TypeScript', 'JavaScript', 'SQL', 'C#', 'C/C++', 'n8n', 'Gemini Flash', 'YOLO Pose', 'Git & GitHub', 'JavaFX'].map((skill) => (
                     <span
@@ -167,10 +154,9 @@ export const AppleSkillsSequence: React.FC = () => {
 
               </div>
 
-              {/* Pie de monitor */}
               <div className="pt-3 border-t border-white/10 flex justify-between items-center text-[11px] font-mono text-slate-500">
                 <span>UPV · Informática</span>
-                <span className="text-emerald-400">✓ Pruebas en proyectos reales</span>
+                <span className="text-emerald-400">{ui.monitorFooter}</span>
               </div>
             </motion.div>
           </div>
