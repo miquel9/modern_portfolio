@@ -4,7 +4,7 @@ import { motion, useScroll, useSpring } from 'framer-motion';
 import { PROJECTS, SKILL_CATEGORIES } from './data/projects';
 import { HeroParallax } from './components/HeroParallax';
 import { HorizontalScrollShowcase } from './components/HorizontalScrollShowcase';
-import { AppleRoboticsSequence } from './components/AppleRoboticsSequence';
+import { AppleSkillsSequence } from './components/AppleSkillsSequence';
 import { ContactForm } from './components/ContactForm';
 import { 
   ArrowDown, 
@@ -87,10 +87,9 @@ export function App() {
           </a>
 
           <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-slate-400">
-            <a href="#proyectos" className="hover:text-white transition-colors">Proyectos (Horizontal)</a>
-            <a href="#vision" className="hover:text-white transition-colors">Visión UR5 (Apple Scroll)</a>
+            <a href="#proyectos" className="hover:text-white transition-colors">Proyectos</a>
+            <a href="#habilidades" className="hover:text-white transition-colors">Habilidades (Apple Scroll)</a>
             <a href="#experiencia" className="hover:text-white transition-colors">Trayectoria</a>
-            <a href="#stack" className="hover:text-white transition-colors">Habilidades</a>
             <a href="#contacto" className="hover:text-white transition-colors">Contacto</a>
           </nav>
 
@@ -123,17 +122,17 @@ export function App() {
         </div>
       </header>
 
-      {/* 1. HERO PARALLAX (Scroll-Linked: el objeto 3D se endereza y escala a tu velocidad de scroll) */}
+      {/* 1. HERO PARALLAX: Presentación personal y visión global equilibrada */}
       <HeroParallax onExploreClick={scrollToProjects} />
 
-      {/* 2. HORIZONTAL SCROLL-LINKED SHOWCASE (Tus proyectos se desplazan en el eje X guiados por el scroll vertical) */}
+      {/* 2. HORIZONTAL SCROLL-LINKED SHOWCASE (Tus proyectos en un paseo horizontal interactivo) */}
       <div id="proyectos" ref={projectsRef}>
         <HorizontalScrollShowcase />
       </div>
 
-      {/* 3. APPLE PRODUCT DEMO SEQUENCE (Desarmando el pipeline de visión de Kinema Nexus UR5 paso a paso) */}
-      <div id="vision">
-        <AppleRoboticsSequence />
+      {/* 3. APPLE SCROLL SEQUENCE: HABILIDADES, LENGUAJES Y LO QUE SÉ HACER */}
+      <div id="habilidades">
+        <AppleSkillsSequence />
       </div>
 
       {/* 4. TRAYECTORIA Y RECONOCIMIENTOS */}
@@ -179,7 +178,7 @@ export function App() {
               <h3 className="text-lg font-bold text-white mb-1">Universitat Politècnica de València</h3>
               <p className="text-xs text-slate-400 mb-4 font-medium">Grado en Ingeniería Informática</p>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Fundamentos de ingeniería del software, algoritmos y estructuras de datos, programación en Java y Python, bases de datos SQL y arquitectura de computadores.
+                Formación en programación orientada a objetos (Java, Python), estructuras de datos, algoritmia, bases de datos relacionales SQL y diseño de aplicaciones.
               </p>
             </div>
           </motion.div>
@@ -203,44 +202,7 @@ export function App() {
         </div>
       </section>
 
-      {/* 5. STACK TECNOLÓGICO */}
-      <section id="stack" className="relative z-10 max-w-6xl mx-auto px-6 py-20 border-b border-white/[0.08]">
-        <div className="mb-10">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
-            Competencias Técnicas
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">
-            Lenguajes & Ecosistema
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {SKILL_CATEGORIES.map((cat, idx) => (
-            <motion.div
-              key={cat.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.08, duration: 0.4 }}
-              className="bg-[#0b0e15] border border-white/10 p-5 rounded-2xl"
-            >
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 mb-3 pb-2 border-b border-white/[0.08]">
-                {cat.name}
-              </h4>
-              <div className="space-y-1.5 text-xs text-slate-300">
-                {cat.skills.map((s) => (
-                  <div key={s} className="flex items-center gap-2">
-                    <span className="w-1 h-1 rounded-full bg-cyan-400" />
-                    <span>{s}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* 6. CONTACTO CON FORMULARIO REAL DIRECTO AL CORREO */}
+      {/* 5. CONTACTO CON FORMULARIO REAL DIRECTO AL CORREO */}
       <section id="contacto" className="relative z-10 max-w-4xl mx-auto px-6 py-28 text-center space-y-8">
         <div className="space-y-3">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
@@ -250,7 +212,7 @@ export function App() {
             ¿Tienes un proyecto o reto en mente?
           </h2>
           <p className="text-sm text-slate-400 max-w-md mx-auto">
-            Abierto a proyectos de software, desarrollo de pipelines de IA o visión por computador. Rellena el formulario o escribe a <a href="mailto:miqnavdel@gmail.com" className="text-cyan-400 underline">miqnavdel@gmail.com</a>.
+            Abierto a proyectos de software, desarrollo de automatizaciones con IA o robótica. Rellena el formulario o escribe a <a href="mailto:miqnavdel@gmail.com" className="text-cyan-400 underline">miqnavdel@gmail.com</a>.
           </p>
         </div>
 
@@ -261,7 +223,7 @@ export function App() {
       <footer className="relative z-10 border-t border-white/[0.08] py-12 px-6 text-xs text-slate-500 font-mono">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            © {new Date().getFullYear()} Miquel Navarrete de Lanuza · Motion.dev Scroll-Linked Portfolio
+            © {new Date().getFullYear()} Miquel Navarrete de Lanuza · Portfolio con Scroll-Linked Motion
           </div>
           <div className="flex items-center gap-6">
             <a href="https://github.com/miquel9" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
