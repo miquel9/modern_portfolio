@@ -2,75 +2,71 @@
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/500.css";
 
-/* Overrides para combinar Tailwind v4 con los tokens canónicos de taste-skill */
+/* Lenis smooth scroll recommended styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 :root {
-  --bg: #070708;
-  --card: #121316;
-  --surface: #18191e;
-  --ink: #f2f2f3;
-  --muted: #8a8d98;
-  --accent: #2563eb;
+  --bg: #050608;
+  --surface: #0e1118;
+  --card: #121622;
   --border: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.04);
+  --ink: #f8fafc;
+  --muted: #94a3b8;
 }
 
 body {
+  margin: 0;
+  padding: 0;
   background-color: var(--bg);
   color: var(--ink);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
 }
 
-/* Taste minimal button */
-.btn-taste {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 22px;
-  font-size: 15px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.15s ease;
-  cursor: pointer;
+/* Subtle dot grid */
+.tech-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-.btn-taste-primary {
-  background-color: #f2f2f3;
-  color: #070708;
-}
-.btn-taste-primary:hover {
-  background-color: #ffffff;
-  transform: translateY(-1px);
+/* Perspective container for 3D scroll turns */
+.perspective-container {
+  perspective: 1200px;
 }
 
-.btn-taste-secondary {
-  background-color: transparent;
-  color: #f2f2f3;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
-.btn-taste-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.25);
+::-webkit-scrollbar-track {
+  background: #050608;
 }
-
-/* Taste Card (x.ai style: hairline, true size preview, clean 1px highlight) */
-.taste-card {
-  background: #121316;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
 }
-.taste-card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  transform: translateY(-2px);
-}
-
-/* Clean hairline divider */
-.hairline {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
